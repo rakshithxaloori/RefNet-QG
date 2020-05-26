@@ -1,4 +1,5 @@
 import string
+import re
 
 from nltk.tokenize import wordpunct_tokenize, word_tokenize
 from langdetect import detect
@@ -23,14 +24,11 @@ def remove_non_language(sentence, language_code):
 
 
 def remove_numbers(sentence):
-    """ Removes the [number] substring from sentence. """
+    """ Removes the \"[number]\" substring from sentence. """
     while True:
-        index = sentence.find("[")
-        if index == -1:
+        # Using regular expression, find and replace until no more are found
+        newSentence = re.sub("[\[\d\]]", "", sentence)
+        if newSentence == sentence:
             break
-        # Remove a set of [number]
-        sentence.replace(sentence[index+2], '')
-        sentence.replace(sentence[index+1], '')
-        sentence.replace(sentence[index], '')
-
+        sentence = newSentence
     return sentence
