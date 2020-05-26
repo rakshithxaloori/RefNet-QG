@@ -54,10 +54,15 @@ if os.path.exists(os.path.join(languageParsedDirectoryPath, dataType + "_questio
 if os.path.exists(os.path.join(languageParsedDirectoryPath, dataType + "_answer")):
     os.remove(os.path.join(languageParsedDirectoryPath, dataType + "_answer"))
 
+count = 0
 for eachData in data["data"]:
     # Add the language constraint
     if eachData["paragraphs"][0]["qas"][0]["id"].find(language) == -1:
         continue
+
+    print(language.upper(), " data found!: ", count)
+    count += 1
+
     # title
     # paragraphs --> list of dicts
         # qas  --> list of dicts
@@ -69,23 +74,23 @@ for eachData in data["data"]:
     # Creating a list of data with the specified language
     copiedEachData = deepcopy(eachData)
     # Removing non-language words
-    data_list.append(remove_non_language(
-        copiedEachData["paragraphs"][0]["context"], language_code))
+    sentence = copiedEachData["paragraphs"][0]["context"]
+    sentence = remove_numbers(sentence)
+    sentence = remove_non_language(sentence, language_code)
+    data_list.append(remove_non_language(sentence, language_code))
 
     contextFile = open(os.path.join(
-        languageParsedDirectoryPath, dataType + "_context"), 'a+')
+        languageParsedDirectoryPath, dataType + "_context.txt"), 'a+')
     questionFile = open(os.path.join(
-        languageParsedDirectoryPath, dataType + "_question"), 'a+')
+        languageParsedDirectoryPath, dataType + "_question.txt"), 'a+')
     answerFile = open(os.path.join(
-        languageParsedDirectoryPath, dataType + "_answer"), 'a+')
+        languageParsedDirectoryPath, dataType + "_answer.txt"), 'a+')
 
     for paragraph in eachData["paragraphs"]:
         for qa in paragraph["qas"]:
             # Append to the three files
             # Context file -- paragraph[context]
-            sentence = paragraph["context"]
-            sentence = remove_numbers(sentence)
-            contextFile.write(remove_non_language(sentence, language_code))
+            contextFile.write(sentence)
             contextFile.write('\n')
 
             # Questions file -- qa["question"]
