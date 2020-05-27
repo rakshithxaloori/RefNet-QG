@@ -1,0 +1,5 @@
+numpy==1.16.1
+tensorflow==1.14
+gensim
+nltk==3.4.5
+matplotlib
