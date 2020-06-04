@@ -102,20 +102,8 @@ for eachData in data["data"]:
     for paragraph in eachData["paragraphs"]:
         for qa in paragraph["qas"]:
             # Append to the three files
-            # Context file -- paragraph[context]
-            contextFile.write(context)
-            contextFile.write('\n')
-
-            # Questions file -- qa["question"]
-            question = qa["question"]
-            questionFile.write(question)
-            questionFile.write('\n')
-
             # Answers file -- qa["answers"][0]["text"] -- choosing the first answer
             answer = qa["answers"][0]["text"]
-            answerFile.write(answer)
-            answerFile.write('\n')
-
             # Find the answer in the context
             foundFlag = False
             for sentence in tokenizer.tokenize_sentences(context):
@@ -129,10 +117,26 @@ for eachData in data["data"]:
             if not foundFlag:
                 # The answer is not found
                 if context.find(answer) != -1:
-                    answerSentenceFile.write("FOUND IN CONTEXT")
+                    print("FOUND IN CONTEXT")
                 else:
-                    answerSentenceFile.write("NOT FOUND")
-                answerSentenceFile.write('\n')
+                    print("NOT FOUND")
+                continue
+
+            # Only write the answer if the answer is in the context
+            answerFile.write(answer)
+            answerFile.write('\n')
+
+
+            # Context file -- paragraph[context]
+            contextFile.write(context)
+            contextFile.write('\n')
+
+            # Questions file -- qa["question"]
+            question = qa["question"]
+            questionFile.write(question)
+            questionFile.write('\n')
+
+
 
     # Closing the files
     contextFile.close()
