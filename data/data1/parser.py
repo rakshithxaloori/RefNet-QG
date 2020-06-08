@@ -91,7 +91,7 @@ for eachData in data["data"]:
     context = copiedEachData["paragraphs"][0]["context"]
     # context = remove_numbers(context)
     # context = remove_non_language(context, language_code)
-    # context = remove_extra_white_spaces(context)
+    context = remove_extra_white_spaces(context)
     data_list.append(context)
 
     contextFile = open(contextFilePath, 'a+')
